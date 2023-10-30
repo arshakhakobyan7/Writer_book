@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <title>Writer's Books</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #FFF5EE;
+        }
+        h1 {
+            background-color: #FF5733;
+            color: white;
+            padding: 10px;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        li {
+            margin: 10px;
+            text-align: left;
+            max-width: 300px;
+        }
+        img {
+            width: 150px; /* Set a fixed width for smaller images */
+            height: auto;
+        }
+        h2 {
+            margin-top: 10px;
+        }
+        p {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>{{ writer.firstname }} {{ writer.lastname }}'s Books</h1>
+    <ul>
+        {% for book in books %}
+            <li>
+                <h2>{{ book.name }}</h2>
+                <img src="{{ book.img.url }}">
+                <a href="{% url 'polls:book_details' book.id %}">Read more</a>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

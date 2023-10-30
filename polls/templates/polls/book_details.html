@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <title>{{ book.name }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: left;
+            background-color: #FFF5EE;
+        }
+        h1 {
+            background-color: #FF5733;
+            color: white;
+            padding: 10px;
+        }
+        img {
+            width: 200px;
+            height: auto;
+        }
+        p {
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>{{ book.name }}</h1>
+    <img src="{{ book.img.url }}" alt="{{ book.name }}">
+    <p>{{ book.description }}</p>
+    <ul>
+        {% for com in comment %}
+            <li>
+                {{ com.email }}<br>
+                {{ com.text }}<br>
+            </li>
+            <br>
+        {% endfor %}
+    </ul>
+
+    <form method="post" action="{% url 'polls:add_comment' book.id %}">
+        {% csrf_token %}
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required><br>
+        <label for="text">Comment:</label>
+        <textarea id="text" name="text" rows="4" cols="50" required></textarea><br>
+        <input type="submit" value="Add Comment">
+    </form>
+</body>
+</html>

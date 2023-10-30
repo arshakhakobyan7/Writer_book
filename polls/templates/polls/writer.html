@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <title>Writers</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #FFF5EE;
+            color: #333;
+        }
+        h1 {
+            background-color: #FF5733;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+        .writers-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+        }
+        .writer-card {
+            text-align: center;
+            margin: 20px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            padding: 10px;
+            width: 200px;
+        }
+        .writer-image {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Writers</h1>
+    <div class="writers-container">
+        {% for w in wrt %}
+            <div class="writer-card">
+                <img class="writer-image" src="{{w.img.url}}" alt="{{w.firstname}} {{w.lastname}}">
+                <h3>{{w.firstname}} {{w.lastname}}</h3>
+                <a href="{% url 'polls:writer_books' w.id %}">View Books</a>
+            </div>
+        {% endfor %}
+    </div>
+</body>
+</html>
