@@ -31,5 +31,18 @@ def add_comment(request, book_id):
         comment.save()
 
         return redirect('polls:book_details', book_id=book_id)
-    else:
-        return HttpResponse("Invalid request method. Use POST to submit a comment.")
+
+
+def like(request, book_id):
+    book = Book.objects.get(pk=book_id)
+    if request.method == 'POST':
+        subject = request.POST.get('subject')
+        if subject == 'Like':
+            book.like += 1
+            book.save()
+        elif subject == 'Dislike':
+            book.dislike += 1
+            book.save()
+
+
+    return redirect('polls:book_details', book_id=book_id)

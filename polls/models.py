@@ -14,6 +14,8 @@ class Book(models.Model):
     img = models.ImageField()
     name = models.CharField(max_length=40)
     description = models.TextField()
+    like = models.SmallIntegerField(default=0)
+    dislike = models.SmallIntegerField(default=0)
 
     def __str__(self):
         return f"{self.name}"
@@ -26,3 +28,6 @@ class CommentBook(models.Model):
 
     def __str__(self):
         return f"Com:{self.book}-{self.email}"
+
+# class LikeBook(models.Model):
+#     book = models.ForeignKey(Book, on_delete=models.CASCADE)
