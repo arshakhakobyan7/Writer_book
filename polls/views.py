@@ -1,6 +1,8 @@
 from .models import Writer, Book, CommentBook
-from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.shortcuts import render, redirect, get_object_or_404
+from .forms import CommentBookForm
+
+
 
 
 def writer(request):
@@ -19,18 +21,33 @@ def writer_books(request, writer_id):
 def book_details(request, book_id):
     book = Book.objects.get(id=book_id)
     comment = CommentBook.objects.filter(book=book)
-    return render(request, 'polls/book_details.html', {'book': book, 'comment': comment})
+    form = CommentBookForm()
+    return render(request, 'polls/book_details.html', {'book': book, 'comment': comment, 'form': form})
 
 
 def add_comment(request, book_id):
+    book = get_object_or_404(Book, pk=book_id)
+    error = ''
+
     if request.method == "POST":
-        email = request.POST['email']
-        text = request.POST['text']
+        form = CommentBookForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.book = book
+            comment.save()
+            return redirect('polls:book_details', book_id=book_id)
+        else:
+            error = 'Form was incorrect.'
+    else:
+        form = CommentBookForm()
 
-        comment = CommentBook(book_id=book_id, email=email, text=text)
-        comment.save()
-
-        return redirect('polls:book_details', book_id=book_id)
+    context = {
+        'form': form,
+        'error': error,
+        'book': book,
+        'comment': CommentBook.objects.filter(book=book),  # Load existing comments for the book
+    }
+    return render(request, 'polls/book_details.html', context)
 
 
 def like(request, book_id):
