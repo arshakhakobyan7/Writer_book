@@ -29,5 +29,3 @@ class CommentBook(models.Model):
     def __str__(self):
         return f"Com:{self.book}-{self.email}"
 
-# class LikeBook(models.Model):
-#     book = models.ForeignKey(Book, on_delete=models.CASCADE)
