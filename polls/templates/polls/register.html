@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Registration</title>
+</head>
+<body>
+    <p>Registration</p>
+    <form method="post" action="{% url 'polls:register' %}">
+        {% csrf_token %}
+        {{ form.first_name }}<br>
+        {{ form.last_name }}<br>
+        {{ form.username }}<br>
+        {{ form.email }}<br>
+        {{ form.password }}<br>
+        <span>{{ error }}</span><br>
+        <input type="submit" value="Sign Up">
+    </form>
+</body>
+</html>

@@ -1,9 +1,26 @@
 from .models import Writer, Book, CommentBook
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import CommentBookForm
+from .forms import CommentBookForm, UserForm
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 
 
 
+def register(request):
+    if request.method == "POST":
+        form = UserForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            user.save()
+            return redirect('polls:login')
+    else:
+        form = UserForm()
+
+    context = {
+        'form': form,
+    }
+    return render(request, 'polls/register.html', context)
 
 def writer(request):
     wrt = Writer.objects.all()
@@ -45,7 +62,7 @@ def add_comment(request, book_id):
         'form': form,
         'error': error,
         'book': book,
-        'comment': CommentBook.objects.filter(book=book),  # Load existing comments for the book
+        'comment': CommentBook.objects.filter(book=book)
     }
     return render(request, 'polls/book_details.html', context)
 
@@ -61,5 +78,32 @@ def like(request, book_id):
             book.dislike += 1
             book.save()
 
-
     return redirect('polls:book_details', book_id=book_id)
+
+
+def login_user(request):
+    error = ''
+
+    if request.method == "POST":
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        userr = authenticate(request, username=username, password=password)
+
+        if userr is not None:
+            login(request, userr)
+            return redirect('polls:writer')
+        else:
+            error = 'Invalid username or password'
+
+    return render(request, 'polls/login.html', {'error': error})
+
+
+def logout_user(request):
+    logout(request)
+    return render(request, 'polls/writer.html')
+
+@login_required(login_url='polls:login_user')
+def user(request, username):
+    user = get_object_or_404(User, username=username)
+    return render(request, 'polls/user.html', {'user': user})
